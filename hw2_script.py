@@ -7,8 +7,8 @@ treatment_col = "Have you ever sought treatment for a mental health disorder fro
 mental_health_disclosure_col = "Would you feel comfortable discussing a mental health issue with your direct supervisor(s)?"
 mental_health_support_col = "Overall, how well do you think the tech industry supports employees with mental health issues?"
 age_col = "What is your age?"
-gender_col = "What is your gender?"
 race_col = "What is your race?"
+current_mental_health_disorder_col = "Do you *currently* have a mental health disorder?"
 
 # Read the CSV file
 df = pd.read_csv('mental-health-in-tech-survey-2019.csv')
@@ -25,16 +25,20 @@ dependent_vars = {
 
 protected_vars = {
     'age': 'age_group',
-    'gender': gender_col,
+    'current_mental_health_disorder': current_mental_health_disorder_col,
     'race': race_col
 }
 
 # Define labels for protected variables
 protected_labels = {
     'age': 'Age Group',
-    'gender': 'Gender',
+    'current_mental_health_disorder': 'Current Mental Health Disorder',
     'race': 'Race'
 }
+
+# Function to convert snake_case to title case
+def to_title_case(s):
+    return ' '.join(word.capitalize() for word in s.replace('_', ' ').split())
 
 # Compute frequencies and create tables and histograms
 for dep_var_key, dep_var_col in dependent_vars.items():
@@ -44,20 +48,40 @@ for dep_var_key, dep_var_col in dependent_vars.items():
         
         # Compute frequency table
         freq_table = df_subset.groupby(group_col)[dep_var_col].value_counts(normalize=False).unstack(fill_value=0)
-        print(f"Frequency table for {dep_var_key} by {prot_var_key}:")
-        print(freq_table)
+        
+        # Print frequency table in descriptive format
+        print(f"Independent Variable - {to_title_case(prot_var_key)}")
+        for dep_value in freq_table.columns:
+            print(f"Dependent Variable - {to_title_case(dep_var_key)} - {dep_value}")
+        for prot_value in freq_table.index:
+            freq_str = f"{to_title_case(prot_var_key)} - {prot_value}: "
+            freq_str += ', '.join(f"Frequency of {dep_value}: {freq_table.loc[prot_value, dep_value]}" for dep_value in freq_table.columns)
+            print(freq_str)
         print()
         
-        # Save frequency table as CSV with appropriate index label
-        freq_table.to_csv(f"{dep_var_key}_by_{prot_var_key}.csv", index_label=protected_labels[prot_var_key])
+        # Create descriptive frequency table for CSV
+        csv_rows = []
+        csv_rows.append(f"Independent Variable - {to_title_case(prot_var_key)}")
+        for dep_value in freq_table.columns:
+            csv_rows.append(f"Dependent Variable - {to_title_case(dep_var_key)} - {dep_value}")
+        for prot_value in freq_table.index:
+            row = f"{to_title_case(prot_var_key)} - {prot_value}"
+            for dep_value in freq_table.columns:
+                row += f",Frequency of {dep_value}: {freq_table.loc[prot_value, dep_value]}"
+            csv_rows.append(row)
+        
+        # Save frequency table as CSV
+        with open(f"{dep_var_key}_by_{prot_var_key}.csv", 'w') as f:
+            for row in csv_rows:
+                f.write(row + '\n')
         
         # Create vertical bar chart
         plt.figure(figsize=(12, 6))
         sns.countplot(x=group_col, hue=dep_var_col, data=df_subset, palette='Set2')
-        plt.title(f"Frequency of {dep_var_key} by {prot_var_key}")
-        plt.xlabel(prot_var_key.capitalize())
-        plt.ylabel("Frequency")
-        plt.legend(title=dep_var_key, bbox_to_anchor=(1.05, 1), loc='upper left')
+        plt.title(f"Frequency of {to_title_case(dep_var_key)} by {to_title_case(prot_var_key)}")
+        plt.xlabel(to_title_case(prot_var_key), labelpad=5)
+        plt.ylabel("Frequency", labelpad=5)
+        plt.legend(title=to_title_case(dep_var_key), bbox_to_anchor=(1.05, 1), loc='upper left')
         plt.xticks(rotation=45)
         plt.tight_layout()
         plt.savefig(f"{dep_var_key}_by_{prot_var_key}.png")
