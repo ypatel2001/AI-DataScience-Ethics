@@ -29,13 +29,6 @@ protected_vars = {
     'race': race_col
 }
 
-# Define labels for protected variables
-protected_labels = {
-    'age': 'Age Group',
-    'current_mental_health_disorder': 'Current Mental Health Disorder',
-    'race': 'Race'
-}
-
 # Function to convert snake_case to title case
 def to_title_case(s):
     return ' '.join(word.capitalize() for word in s.replace('_', ' ').split())
@@ -49,7 +42,7 @@ for dep_var_key, dep_var_col in dependent_vars.items():
         # Compute frequency table
         freq_table = df_subset.groupby(group_col)[dep_var_col].value_counts(normalize=False).unstack(fill_value=0)
         
-        # Print frequency table in descriptive format
+        # Print frequency table for verification
         print(f"Independent Variable - {to_title_case(prot_var_key)}")
         for dep_value in freq_table.columns:
             print(f"Dependent Variable - {to_title_case(dep_var_key)} - {dep_value}")
@@ -59,20 +52,18 @@ for dep_var_key, dep_var_col in dependent_vars.items():
             print(freq_str)
         print()
         
-        # Create descriptive frequency table for CSV
-        csv_rows = []
-        csv_rows.append(f"Independent Variable - {to_title_case(prot_var_key)}")
-        for dep_value in freq_table.columns:
-            csv_rows.append(f"Dependent Variable - {to_title_case(dep_var_key)} - {dep_value}")
-        for prot_value in freq_table.index:
-            row = f"{to_title_case(prot_var_key)} - {prot_value}"
-            for dep_value in freq_table.columns:
-                row += f",Frequency of {dep_value}: {freq_table.loc[prot_value, dep_value]}"
-            csv_rows.append(row)
-        
-        # Save frequency table as CSV
+        # Write frequency table to CSV in new format
         with open(f"{dep_var_key}_by_{prot_var_key}.csv", 'w') as f:
-            for row in csv_rows:
+            independent_var_name = to_title_case(prot_var_key)
+            dependent_var_name = to_title_case(dep_var_key)
+            dependent_cats = list(freq_table.columns)
+            # Write header
+            header = f"Independent Variable - {independent_var_name},{','.join([f'Dependent Variable - {dependent_var_name} - {cat}' for cat in dependent_cats])}"
+            f.write(header + '\n')
+            # Write data rows
+            for ind_cat in freq_table.index:
+                row_data = [f"{independent_var_name} - {ind_cat}"] + [f"Frequency of {dep_cat}: {freq_table.loc[ind_cat, dep_cat]}" for dep_cat in dependent_cats]
+                row = ','.join(map(str, row_data))
                 f.write(row + '\n')
         
         # Create vertical bar chart

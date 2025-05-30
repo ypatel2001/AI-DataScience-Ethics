@@ -1,0 +1,7 @@
+Independent Variable - Age,Dependent Variable - Treatment - False,Dependent Variable - Treatment - True
+Age - 0-19,Frequency of False: 2,Frequency of True: 3
+Age - 20-29,Frequency of False: 50,Frequency of True: 66
+Age - 30-39,Frequency of False: 50,Frequency of True: 88
+Age - 40-49,Frequency of False: 24,Frequency of True: 45
+Age - 50-59,Frequency of False: 7,Frequency of True: 14
+Age - 60+,Frequency of False: 1,Frequency of True: 1
