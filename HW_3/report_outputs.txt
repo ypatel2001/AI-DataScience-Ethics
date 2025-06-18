@@ -1,0 +1,70 @@
+Objective Ordering Schemes:
+For Sexual Orientation:
+- heterosexual: mean toxicity 0.5552, assigned value 1
+- lgbtq: mean toxicity 0.5552, assigned value 2
+- lgbt: mean toxicity 0.5600, assigned value 3
+- straight: mean toxicity 0.5602, assigned value 4
+- gay: mean toxicity 0.7210, assigned value 5
+- lesbian: mean toxicity 0.7395, assigned value 6
+- homosexual: mean toxicity 0.7528, assigned value 7
+- bisexual: mean toxicity 0.7804, assigned value 8
+- queer: mean toxicity 0.8884, assigned value 9
+
+For Gender:
+- trans: mean toxicity 0.5074, assigned value 1
+- nonbinary: mean toxicity 0.5552, assigned value 2
+- male: mean toxicity 0.5851, assigned value 3
+- female: mean toxicity 0.6034, assigned value 4
+- transgender: mean toxicity 0.7411, assigned value 5
+
+For Race/National Origin:
+- middle eastern: mean toxicity 0.3461, assigned value 1
+- european: mean toxicity 0.3681, assigned value 2
+- canadian: mean toxicity 0.3872, assigned value 3
+- indian: mean toxicity 0.4081, assigned value 4
+- african: mean toxicity 0.4178, assigned value 5
+- african american: mean toxicity 0.4271, assigned value 6
+- american: mean toxicity 0.4416, assigned value 7
+- japanese: mean toxicity 0.4428, assigned value 8
+- asian: mean toxicity 0.4470, assigned value 9
+- chinese: mean toxicity 0.4618, assigned value 10
+- mexican: mean toxicity 0.4865, assigned value 11
+- white: mean toxicity 0.5367, assigned value 12
+- latino: mean toxicity 0.5552, assigned value 13
+- latina: mean toxicity 0.5552, assigned value 14
+- latinx: mean toxicity 0.5552, assigned value 15
+- hispanic: mean toxicity 0.6286, assigned value 16
+- black: mean toxicity 0.6428, assigned value 17
+
+For Religion:
+- christian: mean toxicity 0.4853, assigned value 1
+- buddhist: mean toxicity 0.4861, assigned value 2
+- muslim: mean toxicity 0.5040, assigned value 3
+- catholic: mean toxicity 0.5331, assigned value 4
+- protestant: mean toxicity 0.5447, assigned value 5
+- taoist: mean toxicity 0.5552, assigned value 6
+- jewish: mean toxicity 0.5782, assigned value 7
+- sikh: mean toxicity 0.6952, assigned value 8
+
+For Age:
+- older: mean toxicity 0.4436, assigned value 1
+- middle aged: mean toxicity 0.4611, assigned value 2
+- younger: mean toxicity 0.4682, assigned value 3
+- old: mean toxicity 0.4984, assigned value 4
+- young: mean toxicity 0.5275, assigned value 5
+- millenial: mean toxicity 0.5552, assigned value 6
+- elderly: mean toxicity 0.5552, assigned value 7
+- teenage: mean toxicity 0.6492, assigned value 8
+
+For Disability:
+- deaf: mean toxicity 0.5552, assigned value 1
+- paralyzed: mean toxicity 0.5552, assigned value 2
+- blind: mean toxicity 0.6369, assigned value 3
+
+Correlation Coefficients:
+- Sexual Orientation: Correlation Coefficient: 0.2095, Correlation Strength: weak
+- Gender: Correlation Coefficient: 0.0682, Correlation Strength: very weak
+- Race/National Origin: Correlation Coefficient: -0.0466, Correlation Strength: very weak
+- Religion: Correlation Coefficient: 0.0282, Correlation Strength: very weak
+- Age: Correlation Coefficient: 0.0002, Correlation Strength: very weak
+- Disability: Correlation Coefficient: 0.0296, Correlation Strength: very weak
