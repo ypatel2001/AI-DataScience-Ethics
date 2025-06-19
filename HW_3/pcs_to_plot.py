@@ -27,9 +27,9 @@ for pc in pcs_to_plot:
     plt.ylim(0, 10)
     
     # Add title and labels
-    plt.title(f'Toxicity vs {pc} (Average per Subgroup)')
+    plt.title(f'Correlation Between Toxicity and {pc} in Wikipedia Comments')
     plt.xlabel('Numerical Subgroup Value')
-    plt.ylabel('Average Toxicity (x10)')
+    plt.ylabel('Average Toxicity (Scaled up by 10 for Visibility)')
     
     # Add grid lines for readability
     plt.grid(True)

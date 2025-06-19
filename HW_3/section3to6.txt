@@ -1,0 +1,71 @@
+Step 3.1: Population Statistics
+Population mean: 0.5495
+Population standard deviation: 0.3620
+Range including ~95% of TOXICITY: [-0.1745, 1.2736]
+
+Step 3.2: 10% Sample Statistics
+Sample mean: 0.5514
+Sample standard deviation: 0.3623
+Margin of error: 0.0082
+
+Step 3.3: 60% Sample Statistics
+Sample mean: 0.5489
+Sample standard deviation: 0.3622
+Margin of error: 0.0034
+
+Step 4.1: Gender in Reduced Dataset
+Mean: 0.5984
+Standard deviation: 0.3426
+
+Step 4.2: Gender in 10% Sample
+Mean: 0.6038
+Standard deviation: 0.3441
+Margin of error: 0.0246
+
+Step 4.3: Gender in 60% Sample
+Mean: 0.5993
+Standard deviation: 0.3442
+Margin of error: 0.0101
+
+Step 4.4: 10% Gender mean within 10% population CI? False
+Step 4.4: 60% Gender mean within 60% population CI? False
+
+Step 4.5: Explanation for Step 4.4 requires manual interpretation based on results.
+
+Step 5.1: Subgroups in Reduced Dataset
+male: Mean: 0.5851, Std: 0.3377
+female: Mean: 0.6034, Std: 0.3369
+nonbinary: Mean: 0.5552, Std: 0.3444
+transgender: Mean: 0.7411, Std: 0.2566
+trans: Mean: 0.5074, Std: 0.3798
+
+Step 5.2: Subgroups in 10% Sample
+male: Mean: 0.6019, Std: 0.3295, MoE: 0.0520
+female: Mean: 0.5670, Std: 0.3543, MoE: 0.0579
+nonbinary: Mean: 0.5955, Std: 0.3310, MoE: 0.0539
+transgender: Mean: 0.7398, Std: 0.2631, MoE: 0.0418
+trans: Mean: 0.5147, Std: 0.3916, MoE: 0.0615
+
+Step 5.3: Subgroups in 60% Sample
+male: Mean: 0.5881, Std: 0.3370, MoE: 0.0220
+female: Mean: 0.6174, Std: 0.3374, MoE: 0.0225
+nonbinary: Mean: 0.5485, Std: 0.3452, MoE: 0.0228
+transgender: Mean: 0.7406, Std: 0.2550, MoE: 0.0167
+trans: Mean: 0.5056, Std: 0.3846, MoE: 0.0247
+
+Step 5.4: Check for 10% Sample
+male: False
+female: False
+nonbinary: False
+transgender: False
+trans: False
+Step 5.4: Check for 60% Sample
+male: False
+female: False
+nonbinary: True
+transgender: False
+trans: False
+
+Step 5.5: Explanation for Step 5.4 requires manual interpretation based on results.
+
+Step 6: Plot saved as 'toxicity_analysis_plot.png'
