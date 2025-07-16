@@ -1,0 +1,109 @@
+import pandas as pd
+import numpy as np
+from aif360.datasets import BinaryLabelDataset
+from aif360.algorithms.preprocessing import Reweighing
+
+# Load and prepare the dataset
+try:
+    df = pd.read_csv('drug_consumption_processed.csv')
+except FileNotFoundError:
+    print("Error: 'drug_consumption_processed.csv' not found. Ensure the file is in the working directory.")
+    exit(1)
+
+# Select relevant columns
+df = df[['Gender', 'Age', 'Cannabis_Use', 'Nicotine_Use']]
+
+# Create binary columns for protected attributes
+df['Gender_binary'] = (df['Gender'] == -0.48246).astype(int)  # 1 = Male (privileged), 0 = Female (unprivileged)
+df['Age_binary'] = (df['Age'] >= 0.49788).astype(int)        # 1 = Older (privileged, ≥35), 0 = Younger (<35)
+
+# Diagnostic: Print outcome counts
+print("Diagnostic - Age value counts:\n", df['Age'].value_counts())
+print("\nDiagnostic - Cannabis_Use by Age:\n", df.groupby(['Age', 'Cannabis_Use']).size())
+print("\nDiagnostic - Nicotine_Use by Age:\n", df.groupby(['Age', 'Nicotine_Use']).size())
+print("\nDiagnostic - Cannabis_Use by Gender:\n", df.groupby(['Gender', 'Cannabis_Use']).size())
+print("\nDiagnostic - Nicotine_Use by Gender:\n", df.groupby(['Gender', 'Nicotine_Use']).size())
+
+# Define protected attributes and outcomes
+protected_attributes = ['Gender_binary', 'Age_binary']
+outcome_variables = ['Cannabis_Use', 'Nicotine_Use']
+
+# Define comparison labels for clarity
+comparison_labels = {
+    'Gender_binary': 'Male vs. Female',
+    'Age_binary': 'Younger vs. Older'
+}
+
+# Function to compute fairness metrics
+def compute_fairness_metrics(df, attr, outcome, weights=None):
+    privileged = df[df[attr] == 1]
+    unprivileged = df[df[attr] == 0]
+    if weights is None:
+        p_priv = privileged[outcome].mean() if len(privileged) > 0 else 0
+        p_unpriv = unprivileged[outcome].mean() if len(unprivileged) > 0 else 0
+    else:
+        priv_weights = weights[privileged.index]
+        unpriv_weights = weights[unprivileged.index]
+        p_priv = np.sum(priv_weights * privileged[outcome]) / np.sum(priv_weights) if len(privileged) > 0 and np.sum(priv_weights) > 0 else 0
+        p_unpriv = np.sum(unpriv_weights * unprivileged[outcome]) / np.sum(unpriv_weights) if len(unprivileged) > 0 and np.sum(unpriv_weights) > 0 else 0
+    spd = p_priv - p_unpriv
+    di = p_unpriv / p_priv if p_priv > 0 else 'NaN'
+    return spd, di
+
+# Compute original fairness metrics
+original_results = []
+for attr in protected_attributes:
+    for outcome in outcome_variables:
+        spd, di = compute_fairness_metrics(df, attr, outcome)
+        original_results.append({
+            'Comparison': f"{comparison_labels[attr]} {outcome}",
+            'Statistical Parity Difference': round(spd, 4),
+            'Disparate Impact': round(di, 4) if di != 'NaN' else 'NaN'
+        })
+
+# Apply Reweighting for Gender and Age with respect to Cannabis_Use
+weights_dict = {}
+for attr in protected_attributes:
+    dataset = BinaryLabelDataset(
+        df=df[[attr, 'Cannabis_Use']],
+        label_names=['Cannabis_Use'],
+        protected_attribute_names=[attr],
+        favorable_label=1,
+        unprivileged_protected_attributes=[[0]],
+        privileged_protected_attributes=[[1]]
+    )
+    rw = Reweighing(unprivileged_groups=[{attr: 0}], privileged_groups=[{attr: 1}])
+    try:
+        transformed_dataset = rw.fit_transform(dataset)
+        weights_dict[attr] = transformed_dataset.instance_weights
+        print(f"\nDiagnostic - Reweighting successful for {comparison_labels[attr]}, Cannabis_Use. First 10 weights:", transformed_dataset.instance_weights[:10])
+    except Exception as e:
+        print(f"\nReweighting failed for {comparison_labels[attr]}, Cannabis_Use: {e}")
+        weights_dict[attr] = np.ones(len(df))  # Fallback to equal weights
+
+# Combine weights for Gender and Age (product of weights)
+combined_weights = weights_dict['Gender_binary'] * weights_dict['Age_binary']
+
+# Compute transformed fairness metrics
+transformed_results = []
+for attr in protected_attributes:
+    for outcome in outcome_variables:
+        spd, di = compute_fairness_metrics(df, attr, outcome, combined_weights)
+        transformed_results.append({
+            'Comparison': f"{comparison_labels[attr]} {outcome}",
+            'Statistical Parity Difference': round(spd, 4),
+            'Disparate Impact': round(di, 4) if di != 'NaN' else 'NaN'
+        })
+
+# Output results
+original_metrics_df = pd.DataFrame(original_results)
+print("Before Reweighting Fairness Metrics (CSV):")
+print(original_metrics_df.to_csv(index=False, na_rep='NaN'))
+
+transformed_metrics_df = pd.DataFrame(transformed_results)
+print("After Reweighting Fairness Metrics (CSV):")
+print(transformed_metrics_df.to_csv(index=False, na_rep='NaN'))
+
+# Save to CSV files
+original_metrics_df.to_csv('before_fairness_metrics.csv', index=False, na_rep='NaN')
+transformed_metrics_df.to_csv('after_fairness_metrics.csv', index=False, na_rep='NaN')

@@ -1,0 +1,4 @@
+Metric,Value,Ideal,Bias Threshold,Bias Indication
+Disparate Impact,1.00,1.0,<0.8,Fair
+Statistical Parity Difference,0.00,0.0,>0.1 or <-0.1,Fair
+Predictive Parity Difference,0.14,0.0,>0.1 or <-0.1,Bias

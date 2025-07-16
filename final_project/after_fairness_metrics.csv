@@ -1,0 +1,5 @@
+Comparison,Statistical Parity Difference,Disparate Impact
+Male vs. Female Cannabis_Use,0.0408,0.9417
+Male vs. Female Nicotine_Use,0.0949,0.6294
+Younger vs. Older Cannabis_Use,-0.0249,1.0374
+Younger vs. Older Nicotine_Use,-0.088,1.5674

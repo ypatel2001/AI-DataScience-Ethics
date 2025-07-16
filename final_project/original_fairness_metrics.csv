@@ -1,0 +1,5 @@
+Protected Attribute,Outcome,Statistical Parity Difference,Disparate Impact
+Gender (Male vs. Female),Cannabis_Use,0.2232,0.7149
+Gender (Male vs. Female),Nicotine_Use,0.1557,0.4792
+Age (Older vs. Younger),Cannabis_Use,-0.3762,1.842
+Age (Older vs. Younger),Nicotine_Use,-0.1749,2.4952
