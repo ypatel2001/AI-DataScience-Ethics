@@ -18,13 +18,6 @@ df = df[['Gender', 'Age', 'Cannabis_Use', 'Nicotine_Use']]
 df['Gender_binary'] = (df['Gender'] == -0.48246).astype(int)  # 1 = Male (privileged), 0 = Female (unprivileged)
 df['Age_binary'] = (df['Age'] >= 0.49788).astype(int)        # 1 = Older (privileged, ≥35), 0 = Younger (<35)
 
-# Diagnostic: Print outcome counts
-print("Diagnostic - Age value counts:\n", df['Age'].value_counts())
-print("\nDiagnostic - Cannabis_Use by Age:\n", df.groupby(['Age', 'Cannabis_Use']).size())
-print("\nDiagnostic - Nicotine_Use by Age:\n", df.groupby(['Age', 'Nicotine_Use']).size())
-print("\nDiagnostic - Cannabis_Use by Gender:\n", df.groupby(['Gender', 'Cannabis_Use']).size())
-print("\nDiagnostic - Nicotine_Use by Gender:\n", df.groupby(['Gender', 'Nicotine_Use']).size())
-
 # Define protected attributes and outcomes
 protected_attributes = ['Gender_binary', 'Age_binary']
 outcome_variables = ['Cannabis_Use', 'Nicotine_Use']
@@ -85,6 +78,10 @@ for attr in protected_attributes:
 # Combine weights for Gender and Age (product of weights)
 combined_weights = weights_dict['Gender_binary'] * weights_dict['Age_binary']
 
+# Add combined weights to the DataFrame and save as CSV
+df['Weight'] = combined_weights
+df.to_csv('drug_dataset_reweighted.csv', index=False)
+
 # Compute transformed fairness metrics
 transformed_results = []
 for attr in protected_attributes:
@@ -136,11 +133,9 @@ plt.savefig('di_plot.png')
 plt.show()
 
 # Output results
-print("\nNote: DI for Younger vs. Older is 'NaN' due to zero positive outcomes (Cannabis_Use=1 or Nicotine_Use=1) for Older individuals (Age >= 35).")
 print("Before Reweighting Fairness Metrics (CSV):")
 print(original_metrics_df.to_csv(index=False, na_rep='NaN'))
 
-print("\nNote: Reweighting adjusts Cannabis_Use for Male vs. Female and Younger vs. Older. Combined weights are used. NaN for Younger vs. Older DI is expected.")
 print("After Reweighting Fairness Metrics (CSV):")
 print(transformed_metrics_df.to_csv(index=False, na_rep='NaN'))
 
